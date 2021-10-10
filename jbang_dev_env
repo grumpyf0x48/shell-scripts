@@ -7,15 +7,15 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-jbang_repo="$1"
+jbang_repo="$(realpath $1)"
 bin_dir=${2:-${HOME}/bin}
 
-if [ ! -d ${jbang_repo}/.git ] || [ ! -f ${jbang_repo}/.git/config ]; then
+if [ ! -d "${jbang_repo}"/.git ] || [ ! -f "${jbang_repo}"/.git/config ]; then
     echo "${jbang_repo} is not a git repository" 2>&1
     exit 1
 fi
 
-url=$(grep url ${jbang_repo}/.git/config)
+url=$(grep url "${jbang_repo}"/.git/config)
 
 if [[ ! ${url} == *jbang.git ]]; then
     echo "${jbang_repo} is not a JBang repository" 2>&1
@@ -26,6 +26,6 @@ if [ -d ~/Programs/jbang_dev/ ]; then
     liar -f remove jbang_dev
 fi
 
-liar install jbang_dev ${jbang_repo}/build/distributions/jbang.zip
-ln -vsf ${jbang_repo}/build/libs/jbang.jar ~/Programs/jbang_dev/jbang/bin/jbang.jar
-ln -vsf ~/Programs/jbang_dev/jbang/bin/jbang ${bin_dir}/jbang_dev
+liar install jbang_dev "${jbang_repo}"/build/distributions/jbang.zip
+ln -vsf "${jbang_repo}"/build/libs/jbang.jar ~/Programs/jbang_dev/jbang/bin/jbang.jar
+ln -vsf ~/Programs/jbang_dev/jbang/bin/jbang "${bin_dir}"/jbang_dev
