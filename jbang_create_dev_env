@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# jbang_create_dev_env
+#
+# Installs a dev env for JBang.
+#
+
 set -o errexit
 
 if [ $# -lt 1 ]; then
@@ -7,7 +13,7 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-jbang_repo="$(realpath $1)"
+jbang_repo="$(realpath "$1")"
 bin_dir=${2:-${HOME}/bin}
 
 if [ ! -d "${jbang_repo}"/.git ] || [ ! -f "${jbang_repo}"/.git/config ]; then
@@ -26,6 +32,10 @@ if [ -d ~/Programs/jbang_dev/ ]; then
     liar -f remove jbang_dev
 fi
 
-liar install jbang_dev "${jbang_repo}"/build/distributions/jbang.zip
-ln -vsf "${jbang_repo}"/build/libs/jbang.jar ~/Programs/jbang_dev/jbang/bin/jbang.jar
-ln -vsf ~/Programs/jbang_dev/jbang/bin/jbang "${bin_dir}"/jbang_dev
+jbang_path=~/Programs/jbang_dev/jbang
+
+liar -s "${bin_dir}" install jbang_dev "${jbang_repo}"/build/distributions/jbang.zip
+ln -vsf "${jbang_repo}"/build/libs/jbang.jar ${jbang_path}/bin/jbang.jar
+
+echo "export PATH=${jbang_path}/bin:${PATH}" | tee -a "${HOME}"/.bashrc >/dev/null
+exec bash
