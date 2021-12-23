@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#
+# jbang_generate_completion
+#
+# Generates and installs the Bash Completion file for a JBang script using Picocli.
+#
+
+set -o errexit
+
+usage() {
+    cat <<EOF >&2
+Usage: $0 <script>
+Generates the Bash completion file for a JBang script using Picocli.
+EOF
+}
+
+toClassName() {
+    [[ "$1" == *@* ]] && separator='@'
+    basename "$1" | cut -d "${separator:-.}" -f 1
+}
+
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+
+FILE=$1
+CLASS=$(toClassName "${FILE}")
+COMPLETION=${CLASS}_completion
+
+jbang --quiet --fresh build "${FILE}"
+
+java --class-path "$(jbang info classpath "${FILE}")" picocli.AutoComplete \
+        --force "${CLASS}" \
+        --name="${FILE}" \
+        --completionScript="${COMPLETION}"
+
+sudo cp --verbose "${COMPLETION}" /etc/bash_completion.d/
