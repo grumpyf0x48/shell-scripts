@@ -37,5 +37,12 @@ jbang_path=~/Programs/jbang_dev/jbang
 liar -s "${bin_dir}" install jbang_dev "${jbang_repo}"/build/distributions/jbang.zip
 ln -vsf "${jbang_repo}"/build/libs/jbang.jar ${jbang_path}/bin/jbang.jar
 
-echo "export PATH=${jbang_path}/bin:${PATH}" | tee -a "${HOME}"/.bashrc >/dev/null
+cat <<EOF | tee -a "${HOME}/.bashrc" >/dev/null
+
+#
+# Sets jbang 'dev' in \$PATH
+#
+export PATH=${jbang_path}/bin:\${PATH}
+EOF
+
 exec bash
