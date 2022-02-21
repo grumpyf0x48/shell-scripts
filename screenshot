@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#
+# screenshot: A command to create a screenshot of the active window.
+#
+# Needs: sudo apt-get install imagemagick xdotool
+#
+
+usage() {
+    echo "Usage: SCREENSHOT_NAME=name $0"
+}
+
+getFilePath() {
+	name="$1"
+	index=1
+	filepath=~/Images/"$name"-"$index".png
+	while [ -f  "$filepath" ]; do
+     	filepath=~/Images/"$name"-"$index".png
+		index=$((index + 1))
+	done
+	echo "$filepath"
+}
+
+if [ -z "${SCREENSHOT_NAME}" ]; then
+	SCREENSHOT_NAME=screenshot
+fi
+
+filepath="$(getFilePath "${SCREENSHOT_NAME}")"
+import -window "$(xdotool getactivewindow)" "$filepath"
+xclip -verbose -selection clipboard -target image/png "$filepath"

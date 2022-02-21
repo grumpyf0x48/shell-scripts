@@ -1,0 +1,51 @@
+#!/bin/sh
+
+#
+# nsc: A command to create a new shell script, insert the required shebang and make the script executable.
+#
+
+shell="$SHELL"
+
+usage() {
+    echo "Usage: $0 [-s shell_path] script_name"
+}
+
+# Reset getopts in case it has been previously used in the shell
+OPTIND=1
+while getopts ":s:" opt; do
+    case "$opt" in
+        s)  if [ ! -f "$shell" ]; then
+                echo "Provided Shell '$OPTARG' does not exist !" >&2
+                exit 1
+            fi
+            shell="$OPTARG"
+            echo "Setting shebang to $shell"
+            ;;
+        \?) echo "Unsupported option: -$OPTARG !" >&2
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+# Skip already handled parameters
+shift $((OPTIND - 1))
+
+if [ $# -eq 0 ]; then
+    echo "Missing script_name !" >&2
+    usage
+    exit 1
+fi
+
+script="$1"
+
+if [ -f "$script" ]; then
+    echo "'$script' already exists !" >&2
+    exit 0
+fi
+
+echo "Creating '$script'"
+echo "#!$shell" > "$script"
+
+echo "Making '$script' executable"
+chmod u+x "$script"
