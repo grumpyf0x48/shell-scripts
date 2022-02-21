@@ -1,6 +1,6 @@
 # shell-scripts
 
-A few Shells scripts i use.
+A few Shell scripts i use.
 
 Some to help develop JBang and use JBang scripts.
 
