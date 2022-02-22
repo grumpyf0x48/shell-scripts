@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#
+# list-keyboard-shortcuts: A command to list Gnome keyboard shortcuts.
+#
+
+schema=org.gnome.desktop.wm.keybindings
+
+for key in $(gsettings list-keys "$schema"); do
+    echo "$key = $(gsettings get "$schema" "$key")"
+done | grep -v "\[\]" | sort
