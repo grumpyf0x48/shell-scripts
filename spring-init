@@ -1,0 +1,42 @@
+#!/bin/bash
+
+bootVersionDefault=2.7.1
+
+nameDefault=demo
+groupIdDefault=org.grumpyf0x48
+artifactIdDefault=demo
+dependenciesDefault=web
+
+read -p "Project spring boot version (${bootVersionDefault}): " bootVersion
+
+read -p "Project name (${nameDefault}): " name
+name=${name:-${nameDefault}}
+
+read -p "Project groupId (${groupIdDefault}): " groupId
+groupId=${groupId:-${groupIdDefault}}
+
+read -p "Project artifactId (${artifactIdDefault}): " artifactId
+artifactId="${artifactId:-${artifactIdDefault}}"
+
+packageDefault=${artifactId}
+read -p "Project package (${packageDefault}): " package
+package="${package:-${packageDefault}}"
+
+folderDefault=/tmp/${artifactId}
+read -p "Project folder (${folderDefault}): " folder
+folder="${folder:-${folderDefault}}"
+
+read -p "Project dependencies (${dependenciesDefault}): " dependencies
+dependencies="${dependencies:-${dependenciesDefault}}"
+
+spring init \
+    --build=gradle \
+    --boot-version="${bootVersion:-${bootVersionDefault}}" \
+    --group-id="${groupId}" \
+    --artifact-id="${artifactId}" \
+    --package-name="${groupId}.${package}" \
+    --name="${name}" \
+    --dependencies="${dependencies}" \
+    "${folder}"
+
+rm -f "${folder}/HELP.md" "${folder}/gradlew.bat"
