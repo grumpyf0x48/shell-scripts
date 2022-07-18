@@ -30,6 +30,8 @@ folder="${folder:-${folderDefault}}"
 read -p "Project dependencies (${dependenciesDefault}): " dependencies
 dependencies="${dependencies:-${dependenciesDefault}}"
 
+mkdir -p "${folder}"
+
 spring init \
     --build=gradle \
     --boot-version="${bootVersion:-${bootVersionDefault}}" \
