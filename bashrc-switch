@@ -1,10 +1,6 @@
 #!/bin/bash
 
-if [ ! -f ~/.bashrc.debian ]; then
-    cp --verbose /etc/skel/.bashrc ~/.bashrc.debian
-fi
-
-for bashrc_file in ~/.bashrc?*; do
+for bashrc_file in /etc/skel/.bashrc ~/.bashrc?*; do
     if [[ "${bashrc_file}" =~ .*.bak ]]; then
         continue
     fi
