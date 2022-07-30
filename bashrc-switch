@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ ! -f ~/.bashrc.debian ]; then
+    cp --verbose /etc/skel/.bashrc ~/.bashrc.debian
+fi
+
+for bashrc_file in ~/.bashrc?*; do
+    if [[ "${bashrc_file}" =~ .*.bak ]]; then
+        continue
+    fi
+    echo "Do you want to switch to ${bashrc_file} (Y/N) ? "
+    read -s -n 1 -r
+    if [[ ${REPLY} =~ ^[Yy]$ ]]; then
+        selected_bashrc_file="${bashrc_file}"
+        break
+    fi
+done
+
+if [ -z "${selected_bashrc_file}" ]; then
+    exit 0
+fi
+
+if [ -f ~/.bashrc ] && [ ! -L ~/.bashrc ]; then
+    cp --verbose ~/.bashrc ~/.bashrc."$(date +%s)".bak
+fi
+
+ln --verbose --symbolic --force "${selected_bashrc_file}" ~/.bashrc
