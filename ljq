@@ -1,0 +1,66 @@
+#!/bin/bash
+
+FILTRE=./ljq_filter.jq
+FICHIER_ENTREE=./ljq_input.json
+DELAI=1
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [OPTIONS...]
+
+Tester itérativement un filtre jq sur un fichier d'entrée.
+
+OPTIONS:
+    -F FICHIER_ENTREE .json        : (${FICHIER_ENTREE})
+    -f FILTRE jq à appliquer       : (${FILTRE})
+    -d DELAI d'attente en secondes : (${DELAI})
+    -h Afficher l'aide
+EOF
+}
+
+parser_options() {
+    OPTIND=1
+    while getopts ":F:f:d:h" option; do
+        case "$option" in
+            F) FICHIER_ENTREE="$OPTARG"
+               ;;
+            f) FILTRE="$OPTARG"
+               ;;
+            d) DELAI="$OPTARG"
+               ;;
+            h) usage
+               exit 0
+               ;;
+            :) echo "L'option -$OPTARG a besoin d'un argument !" >&2
+               return 1
+               ;;
+            \?) echo "Option: -$OPTARG inconnue !" >&2
+               return 1
+               ;;
+        esac
+    done
+    shift $((OPTIND - 1))
+
+    for fichier_entree in "${FILTRE}" "${FICHIER_ENTREE}"; do
+        if [ ! -r "${fichier_entree}" ]; then
+            echo "Fichier non trouvé: ${fichier_entree} !" >&2
+            usage
+            exit 1
+        fi
+    done
+
+    return 0
+}
+
+if ! parser_options "$@"; then
+    exit 1
+fi
+
+while 'true'; do
+    clear
+    jq --color-output --from-file "${FILTRE}" "${FICHIER_ENTREE}" \
+        | less --quit-if-one-screen --raw-control-chars
+    sleep "${DELAI}"
+done
+
+exit $?
