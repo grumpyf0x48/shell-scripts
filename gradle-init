@@ -2,20 +2,23 @@
 
 set -o errexit
 
-project=${1}
-package=${2:-${project}}
+DEFAULT_PROJECT=new_java_project
+DEFAULT_PACKAGE_START=org.grumpyf0x48
+
+project=${PROJECT:-${DEFAULT_PROJECT}}
+package=${PACKAGE:-${DEFAULT_PACKAGE_START}.${project}}
 
 mkdir "$project"
 cd "$project"
 
 gradle init \
-	--dsl groovy \
-	--package org.grumpyf0x48."${package}" \
-	--project-name "${project}" \
-	--test-framework junit-jupiter \
-	--type java-application
+    --dsl kotlin \
+    --package "${package}" \
+    --project-name "${project}" \
+    --test-framework junit-jupiter \
+    --type java-application
 
 ls app
 mv app/* .
 rm -fr app
-sed --in-place '$d' settings.gradle
+sed --in-place '$d' settings.gradle.kts
