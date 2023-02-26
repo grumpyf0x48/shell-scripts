@@ -18,7 +18,6 @@ gradle init \
     --test-framework junit-jupiter \
     --type java-application
 
-ls app
 mv app/* .
 rm -fr app
 sed --in-place '$d' settings.gradle.kts
