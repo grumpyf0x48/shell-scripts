@@ -45,7 +45,12 @@ if [ -f "$script" ]; then
 fi
 
 echo "Creating '$script'"
-echo "#!$shell" > "$script"
+cat <<EOF > "$script"
+#!$shell
+
+set -o errexit
+set -o nounset
+EOF
 
 echo "Making '$script' executable"
 chmod u+x "$script"
