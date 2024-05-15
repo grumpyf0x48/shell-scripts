@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -o errexit
+
+source ~/.config/liar/liar-software
+liar_options="-v -d ${programs_home}"
+liar="liar ${liar_options}"
+
+programs_home=~/JvmLanguages
+
+#rm -fr ${programs_home}
+mkdir ${programs_home}
+
+${liar} install groovy ${groovy}
+${liar} install kotlin ${kotlin}
+${liar} install scala_cli ${scala_cli}
