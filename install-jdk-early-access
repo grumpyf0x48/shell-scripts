@@ -16,6 +16,6 @@ fi
 source /home/${SUDO_USER}/.config/liar/liar-software
 liar_options="-r -d ${destination_folder}"
 
-liar ${liar_options} -f remove jdk_ea_23
+liar ${liar_options} -f remove jdk_ea_23 || true
 liar ${liar_options} install jdk_ea_23 ${jdk_ea_23}
 ln -s ${destination_folder}/jdk_ea_23/jdk-23 /usr/lib/jvm/jdk-23
