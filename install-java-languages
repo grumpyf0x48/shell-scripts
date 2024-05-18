@@ -3,14 +3,14 @@
 set -o errexit
 
 source ~/.config/liar/liar-software
-liar_options="-v -d ${programs_home}"
-liar="liar ${liar_options}"
 
-programs_home=~/JvmLanguages
+destination_folder=~/JvmLanguages
 
-#rm -fr ${programs_home}
-mkdir ${programs_home}
+rm -fr ${destination_folder}
+mkdir ${destination_folder}
 
-${liar} install groovy ${groovy}
-${liar} install kotlin ${kotlin}
-${liar} install scala_cli ${scala_cli}
+LIAR_DEFAULT_ARGS="-v -d ${destination_folder}" liar <<EOF
+install groovy ${groovy}
+install kotlin ${kotlin}
+install scala_cli ${scala_cli}
+EOF
