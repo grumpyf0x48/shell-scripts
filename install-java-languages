@@ -2,13 +2,11 @@
 
 set -o errexit
 
-source ~/.config/liar/liar-software
-
 destination_folder=~/JvmLanguages
-
 rm -fr ${destination_folder}
 mkdir ${destination_folder}
 
+source ~/.config/liar/liar-software
 LIAR_DEFAULT_ARGS="-v -d ${destination_folder}" liar <<EOF
 install groovy ${groovy}
 install kotlin ${kotlin}
