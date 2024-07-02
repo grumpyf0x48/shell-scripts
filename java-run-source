@@ -1,0 +1,73 @@
+#!/bin/bash
+
+set -o errexit
+
+help() {
+    cat <<EOF
+Usage: $(basename "${0}") [OPTIONS] JAVA_FILE
+
+    Launch a single or multiple Java source file
+
+    OPTIONS:
+              -h    Display this help
+              -d    Set debug mode
+              -v    Set Java VERSION
+EOF
+    exit 0
+}
+
+parse() {
+    OPTIND=1
+    while getopts ":hdv:" option; do
+        case "${option}" in
+            h)  help
+                ;;
+            d)  set -x
+                ;;
+            v)  VERSION="${OPTARG}"
+                ;;
+            :)  echo "Option -${OPTARG} requires an argument !" >&2
+                exit 1
+                ;;
+            \?) echo "Unsupported option: -${OPTARG} !" >&2
+                ;;
+        esac
+    done
+}
+
+if ! parse "$@"; then
+    exit 1
+fi
+shift $((OPTIND - 1))
+
+JAVA_OPTS="--enable-preview"
+if [ -n "${VERSION}" ]; then
+    JAVA_OPTS="${JAVA_OPTS} --source ${VERSION}"
+fi
+
+INPUT_FILE="${1}"
+if [ -z "${INPUT_FILE}" ]; then
+    echo "Missing JAVA_FILE !" >&2
+    help
+fi
+shift
+
+EFFECTIVE_FILE=/tmp/$(basename "${INPUT_FILE}")
+grep -v "^#!" "${INPUT_FILE}" > "${EFFECTIVE_FILE}"
+
+case ${VERSION} in
+    21)
+        JAVA=${JAVA_21_HOME}/bin/java
+        ;;
+    22)
+        JAVA=${JAVA_22_HOME}/bin/java
+        ;;
+    23)
+        JAVA=${JAVA_23_HOME}/bin/java
+        ;;
+    "")
+        JAVA=java
+        ;;
+esac
+
+${JAVA} ${JAVA_OPTS} ${EFFECTIVE_FILE} "$@"
