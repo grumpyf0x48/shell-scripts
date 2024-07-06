@@ -1,7 +1,8 @@
 #!/bin/bash
 
-bootVersionDefault=2.7.1
-gradleVersionDefault=7.4.2
+bootVersionDefault=3.3.1
+gradleVersionDefault=8.8
+javaVersionDefault=21
 
 nameDefault=demo
 groupIdDefault=org.grumpyf0x48
@@ -9,6 +10,8 @@ artifactIdDefault=demo
 dependenciesDefault=web
 
 read -p "Project spring boot version (${bootVersionDefault}): " bootVersion
+
+read -p "Java version (${javaVersionDefault}): " javaVersion
 
 read -p "Project name (${nameDefault}): " name
 name=${name:-${nameDefault}}
@@ -35,10 +38,12 @@ mkdir -p "${folder}"
 spring init \
     --build=gradle \
     --boot-version="${bootVersion:-${bootVersionDefault}}" \
+    --java-version="${javaVersion:-${javaVersionDefault}}" \
     --group-id="${groupId}" \
     --artifact-id="${artifactId}" \
     --package-name="${groupId}.${package}" \
     --name="${name}" \
+    --type=gradle-project \
     --dependencies="${dependencies}" \
     "${folder}"
 
