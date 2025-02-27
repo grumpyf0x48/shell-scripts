@@ -1,7 +1,7 @@
 #!/bin/bash
 
-bootVersionDefault=3.3.1
-gradleVersionDefault=8.8
+bootVersionDefault=3.4.3
+gradleVersionDefault=8.13
 javaVersionDefault=21
 
 nameDefault=demo
