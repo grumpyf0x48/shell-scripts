@@ -1,15 +1,20 @@
 #!/bin/bash
 
 bootVersionDefault=4.0.2
+languageDefault=java
 javaVersionDefault=25
 
 nameDefault=demo
 groupIdDefault=org.grumpyf0x48
 artifactIdDefault=demo
+
 dependenciesDefault=web
 
 read -p "Project spring boot version (${bootVersionDefault}): " bootVersion
-read -p "Java version (${javaVersionDefault}): " javaVersion
+read -p "Language (${languageDefault}): " language
+if [ "${language}" != "kotlin" ]; then
+  read -p "Java version (${javaVersionDefault}): " javaVersion
+fi
 
 read -p "Project name (${nameDefault}): " name
 name=${name:-${nameDefault}}
@@ -32,6 +37,7 @@ folder="$(mktemp -p /tmp -d ${artifactId}.XXXX)/"
 spring init \
     --build=maven \
     --boot-version="${bootVersion:-${bootVersionDefault}}" \
+    --language="${language:-${languageDefault}}" \
     --java-version="${javaVersion:-${javaVersionDefault}}" \
     --group-id="${groupId}" \
     --artifact-id="${artifactId}" \
