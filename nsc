@@ -48,7 +48,10 @@ echo "Creating '$script'"
 cat <<EOF > "$script"
 #!$shell
 
+# Exits if a pipeline returns a non-zero status
 set -o errexit
+
+# Treats unset variables and parameters as an error
 set -o nounset
 EOF
 
