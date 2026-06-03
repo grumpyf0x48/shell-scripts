@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Script modulaire pour manipuler des fichiers Markdown
+# Usage: toc <commande> [options]
+
+# Fonction pour générer la table des matières
+generate_toc() {
+  local fichier="$1"
+  local profondeur="$2"
+
+  if [ -z "$fichier" ] || [ ! -f "$fichier" ]; then
+    echo "Erreur: Fichier '$fichier' non trouvé." >&2
+    return 1
+  fi
+
+  grep -E "^#{1,$profondeur} " "$fichier" | while read -r line; do
+    niveau=$(echo "$line" | grep -oE "^#{1,$profondeur}" | head -c 100)
+    texte=$(echo "$line" | sed -E "s/^#{1,$profondeur} +//")
+    echo "${niveau} ${texte}"
+  done
+}
+
+# Vérification qu'une commande est fournie
+if [ $# -eq 0 ]; then
+  echo "Erreur: Aucune commande spécifiée." >&2
+  echo "Usage: $0 <commande> [options]" >&2
+  echo "Commandes disponibles: generate" >&2
+  exit 1
+fi
+
+commande="$1"
+shift # On retire la commande de la liste des arguments
+
+# Parsing des options communes ou spécifiques à chaque commande
+fichier=""
+profondeur=2
+
+while getopts ":f:d:" opt; do
+  case $opt in
+    f) fichier="$OPTARG" ;;
+    d) profondeur="$OPTARG" ;;
+    \?) echo "Option invalide: -$OPTARG" >&2; exit 1 ;;
+  esac
+done
+
+# Exécution de la commande
+case "$commande" in
+  generate)
+    # Appel de la fonction avec les options déjà parsées
+    generate_toc "$fichier" "$profondeur"
+    ;;
+
+  *)
+    echo "Erreur: Commande inconnue '$commande'." >&2
+    echo "Commandes disponibles: generate" >&2
+    exit 1
+    ;;
+esac
