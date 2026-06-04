@@ -8,15 +8,17 @@ generate_toc() {
   local fichier="$1"
   local profondeur="$2"
 
-  if [ -z "$fichier" ] || [ ! -f "$fichier" ]; then
-    echo "Erreur: Fichier '$fichier' non trouvé." >&2
+  if [ -z "${fichier}" ] || [ ! -f "${fichier}" ]; then
+    echo "Erreur: Fichier '${fichier}' non trouvé." >&2
     return 1
   fi
 
-  grep -E "^#{1,$profondeur} " "$fichier" | while read -r line; do
+  grep -E "^#{1,$profondeur} " "${fichier}" | while read -r line; do
     niveau=$(echo "$line" | grep -oE "^#{1,$profondeur}" | head -c 100)
     texte=$(echo "$line" | sed -E "s/^#{1,$profondeur} +//")
+    [ ${#niveau} -eq 2 ] && [ ${profondeur} -gt 2 ] && echo
     echo "${niveau} ${texte}"
+    [ ${#niveau} -eq 2 ] && echo
   done
 }
 
@@ -47,7 +49,7 @@ done
 case "$commande" in
   generate)
     # Appel de la fonction avec les options déjà parsées
-    generate_toc "$fichier" "$profondeur"
+    generate_toc "${fichier}" "${profondeur:-2}"
     ;;
 
   *)
