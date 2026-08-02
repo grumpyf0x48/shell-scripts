@@ -11,7 +11,7 @@ fi
 
 # Vérifie qu'au moins une image et une commande sont fournies
 if [ $# -lt 2 ]; then
-    echo "Usage: $0 <docker-image> <command> [args...]" >&2
+    echo "Usage: $(basename "$0") <docker-image> <command> [args...]" >&2
     exit 1
 fi
 
